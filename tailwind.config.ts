@@ -58,6 +58,9 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      fontFamily: {
+        sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Noto Sans", "Ubuntu", "Cantarell", "Helvetica Neue", "Arial", "\u5B8B\u4F53", "Apple Color Emoji", "Segoe UI Emoji"],
+      } as any,
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
