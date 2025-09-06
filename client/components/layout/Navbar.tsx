@@ -5,9 +5,8 @@ export default function Navbar() {
   const location = useLocation();
   const nav = [
     { to: "/", label: "Home" },
-    { to: "/report", label: "Report" },
-    { to: "/feed", label: "Community" },
-    { to: "/authority", label: "Authority" },
+    { to: "/community", label: "Community" },
+    { to: "/authority-dashboard", label: "Authority" },
     { to: "/profile", label: "Profile" },
   ];
   return (
@@ -39,7 +38,7 @@ export default function Navbar() {
         </nav>
         <div className="flex items-center gap-3">
           <Link
-            to="/report"
+            to="/report-issue"
             className="inline-flex items-center rounded-md bg-gradient-to-br from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white shadow hover:opacity-90"
           >
             Report Issue

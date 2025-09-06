@@ -12,6 +12,11 @@ import AuthorityDashboard from "./pages/AuthorityDashboard";
 import CommunityFeed from "./pages/CommunityFeed";
 import Profile from "./pages/Profile";
 import { IssuesProvider } from "@/context/IssuesContext";
+import ReportIssue from "./pages/ReportIssue";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthProvider } from "@/context/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -20,19 +25,37 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <IssuesProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/feed" element={<CommunityFeed />} />
-            <Route path="/authority" element={<AuthorityDashboard />} />
-            <Route path="/report" element={<Index />} />
-            <Route path="/profile" element={<Profile />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </IssuesProvider>
+      <AuthProvider>
+        <IssuesProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/community" element={<CommunityFeed />} />
+              <Route path="/feed" element={<CommunityFeed />} />
+
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
+              <Route path="/report-issue" element={
+                <ProtectedRoute requiredRole="user">
+                  <ReportIssue />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/authority-dashboard" element={
+                <ProtectedRoute requiredRole="authority">
+                  <AuthorityDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/authority" element={<ProtectedRoute requiredRole="authority"><AuthorityDashboard /></ProtectedRoute>} />
+
+              <Route path="/profile" element={<Profile />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </IssuesProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

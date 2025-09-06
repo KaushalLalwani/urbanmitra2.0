@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import Layout from "@/components/layout/Layout";
-import IssueForm from "@/components/IssueForm";
 import IssueCard from "@/components/IssueCard";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -63,7 +62,13 @@ export default function Index() {
                 </span>
               </div>
             </div>
-            <IssueForm />
+            <div className="rounded-xl border bg-card p-6 shadow-sm">
+              <p className="text-sm text-muted-foreground">To submit a report, please login and go to the Report page.</p>
+              <div className="mt-4 flex gap-3">
+                <a href="/login" className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">Login</a>
+                <a href="/report-issue" className="inline-flex items-center rounded-md bg-gradient-to-br from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white shadow hover:opacity-90">Go to Report</a>
+              </div>
+            </div>
           </div>
 
           <div>
