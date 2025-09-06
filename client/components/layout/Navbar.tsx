@@ -15,7 +15,9 @@ export default function Navbar() {
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500" />
-          <span className="font-extrabold tracking-tight text-lg">CivicPulse</span>
+          <span className="font-extrabold tracking-tight text-lg">
+            CivicPulse
+          </span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm">
           {nav.map((n) => (

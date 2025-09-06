@@ -26,29 +26,53 @@ export default function IssueCard({ issue }: { issue: Issue }) {
         <StatusBadge status={issue.status} />
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-sm text-muted-foreground line-clamp-3">{issue.description}</p>
+        <p className="text-sm text-muted-foreground line-clamp-3">
+          {issue.description}
+        </p>
         <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-          <div>Category: <span className="font-medium text-foreground">{issue.category}</span></div>
-          <div>Location: <span className="font-medium text-foreground">{issue.location}</span></div>
+          <div>
+            Category:{" "}
+            <span className="font-medium text-foreground">
+              {issue.category}
+            </span>
+          </div>
+          <div>
+            Location:{" "}
+            <span className="font-medium text-foreground">
+              {issue.location}
+            </span>
+          </div>
         </div>
         {issue.media?.[0] && (
           <div className="overflow-hidden rounded-md border">
             {issue.media[0].type === "image" ? (
-              <img src={issue.media[0].url} className="w-full h-44 object-cover" />
+              <img
+                src={issue.media[0].url}
+                className="w-full h-44 object-cover"
+              />
             ) : (
-              <video src={issue.media[0].url} className="w-full h-44 object-cover" controls />)
-            }
+              <video
+                src={issue.media[0].url}
+                className="w-full h-44 object-cover"
+                controls
+              />
+            )}
           </div>
         )}
         <div className="flex items-center gap-2 pt-1">
           {issue.urgency && <Badge variant="outline">{issue.urgency}</Badge>}
-          {issue.assignedTo && <Badge variant="secondary">Assigned: {issue.assignedTo}</Badge>}
+          {issue.assignedTo && (
+            <Badge variant="secondary">Assigned: {issue.assignedTo}</Badge>
+          )}
         </div>
         {issue.status !== "resolved" && (
           <div className="pt-2">
             <button
               onClick={() =>
-                updateStatus(issue.id, issue.status === "new" ? "in_progress" : "resolved")
+                updateStatus(
+                  issue.id,
+                  issue.status === "new" ? "in_progress" : "resolved",
+                )
               }
               className="text-xs rounded-md border px-3 py-1.5 hover:bg-muted"
             >

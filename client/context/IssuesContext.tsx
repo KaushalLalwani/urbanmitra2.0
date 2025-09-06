@@ -43,7 +43,9 @@ const IssuesArraySchema = z.array(IssueSchema);
 
 type Ctx = {
   issues: Issue[];
-  addIssue: (input: Omit<Issue, "id" | "createdAt" | "updatedAt" | "status">) => Issue;
+  addIssue: (
+    input: Omit<Issue, "id" | "createdAt" | "updatedAt" | "status">,
+  ) => Issue;
   updateStatus: (id: string, status: IssueStatus) => void;
   assignIssue: (id: string, assignee: string | null) => void;
   filtered: (filters: IssueFilters) => Issue[];
@@ -80,84 +82,103 @@ export function IssuesProvider({ children }: { children: React.ReactNode }) {
     saveIssues(issues);
   }, [issues]);
 
-  const api = useMemo<Ctx>(() => ({
-    issues,
-    addIssue: (input) => {
-      const now = new Date().toISOString();
-      const issue: Issue = {
-        id: crypto.randomUUID(),
-        status: "new",
-        createdAt: now,
-        updatedAt: now,
-        upvotes: 0,
-        ...input,
-      };
-      setIssues((prev) => [issue, ...prev]);
-      return issue;
-    },
-    updateStatus: (id, status) => {
-      setIssues((prev) =>
-        prev.map((i) =>
-          i.id === id ? { ...i, status, updatedAt: new Date().toISOString() } : i,
-        ),
-      );
-    },
-    assignIssue: (id, assignee) => {
-      setIssues((prev) =>
-        prev.map((i) => (i.id === id ? { ...i, assignedTo: assignee } : i)),
-      );
-    },
-    filtered: ({ query, status, category }) => {
-      let list = issues;
-      if (status && status !== "all") list = list.filter((i) => i.status === status);
-      if (category && category !== "all") list = list.filter((i) => i.category === category);
-      if (query) {
-        const q = query.toLowerCase();
-        list = list.filter(
-          (i) =>
-            i.title.toLowerCase().includes(q) ||
-            i.description.toLowerCase().includes(q) ||
-            i.location.toLowerCase().includes(q),
+  const api = useMemo<Ctx>(
+    () => ({
+      issues,
+      addIssue: (input) => {
+        const now = new Date().toISOString();
+        const issue: Issue = {
+          id: crypto.randomUUID(),
+          status: "new",
+          createdAt: now,
+          updatedAt: now,
+          upvotes: 0,
+          ...input,
+        };
+        setIssues((prev) => [issue, ...prev]);
+        return issue;
+      },
+      updateStatus: (id, status) => {
+        setIssues((prev) =>
+          prev.map((i) =>
+            i.id === id
+              ? { ...i, status, updatedAt: new Date().toISOString() }
+              : i,
+          ),
         );
-      }
-      return list;
-    },
-    stats: () => {
-      const byStatus = { new: 0, in_progress: 0, resolved: 0 } as Record<IssueStatus, number>;
-      const byCategory = {
-        Roads: 0,
-        Water: 0,
-        Electricity: 0,
-        Sanitation: 0,
-        Safety: 0,
-        Environment: 0,
-        Other: 0,
-      } as Record<IssueCategory, number>;
-
-      issues.forEach((i) => {
-        byStatus[i.status]++;
-        byCategory[i.category]++;
-      });
-
-      // naive resolution time: createdAt -> updatedAt when resolved
-      const durations: number[] = [];
-      issues.forEach((i) => {
-        if (i.status === "resolved") {
-          const start = new Date(i.createdAt).getTime();
-          const end = new Date(i.updatedAt).getTime();
-          durations.push((end - start) / (1000 * 60 * 60));
+      },
+      assignIssue: (id, assignee) => {
+        setIssues((prev) =>
+          prev.map((i) => (i.id === id ? { ...i, assignedTo: assignee } : i)),
+        );
+      },
+      filtered: ({ query, status, category }) => {
+        let list = issues;
+        if (status && status !== "all")
+          list = list.filter((i) => i.status === status);
+        if (category && category !== "all")
+          list = list.filter((i) => i.category === category);
+        if (query) {
+          const q = query.toLowerCase();
+          list = list.filter(
+            (i) =>
+              i.title.toLowerCase().includes(q) ||
+              i.description.toLowerCase().includes(q) ||
+              i.location.toLowerCase().includes(q),
+          );
         }
-      });
-      const avgResolutionHours = durations.length
-        ? Math.round((durations.reduce((a, b) => a + b, 0) / durations.length) * 10) / 10
-        : null;
+        return list;
+      },
+      stats: () => {
+        const byStatus = { new: 0, in_progress: 0, resolved: 0 } as Record<
+          IssueStatus,
+          number
+        >;
+        const byCategory = {
+          Roads: 0,
+          Water: 0,
+          Electricity: 0,
+          Sanitation: 0,
+          Safety: 0,
+          Environment: 0,
+          Other: 0,
+        } as Record<IssueCategory, number>;
 
-      return { total: issues.length, byStatus, byCategory, avgResolutionHours };
-    },
-    clearAll: () => setIssues([]),
-  }), [issues]);
+        issues.forEach((i) => {
+          byStatus[i.status]++;
+          byCategory[i.category]++;
+        });
 
-  return <IssuesContext.Provider value={api}>{children}</IssuesContext.Provider>;
+        // naive resolution time: createdAt -> updatedAt when resolved
+        const durations: number[] = [];
+        issues.forEach((i) => {
+          if (i.status === "resolved") {
+            const start = new Date(i.createdAt).getTime();
+            const end = new Date(i.updatedAt).getTime();
+            durations.push((end - start) / (1000 * 60 * 60));
+          }
+        });
+        const avgResolutionHours = durations.length
+          ? Math.round(
+              (durations.reduce((a, b) => a + b, 0) / durations.length) * 10,
+            ) / 10
+          : null;
+
+        return {
+          total: issues.length,
+          byStatus,
+          byCategory,
+          avgResolutionHours,
+        };
+      },
+      clearAll: () => setIssues([]),
+    }),
+    [issues],
+  );
+
+  return (
+    <IssuesContext.Provider value={api}>{children}</IssuesContext.Provider>
+  );
 }
 
 export function useIssues() {
@@ -166,11 +187,19 @@ export function useIssues() {
   return ctx;
 }
 
-export async function uploadToCloudinary(file: File): Promise<{ url: string; type: "image" | "video" } | null> {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string | undefined;
-  const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string | undefined;
+export async function uploadToCloudinary(
+  file: File,
+): Promise<{ url: string; type: "image" | "video" } | null> {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as
+    | string
+    | undefined;
+  const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as
+    | string
+    | undefined;
 
-  const type: "image" | "video" = file.type.startsWith("video") ? "video" : "image";
+  const type: "image" | "video" = file.type.startsWith("video")
+    ? "video"
+    : "image";
 
   if (!cloudName || !preset) {
     return new Promise((resolve) => {

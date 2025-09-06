@@ -8,11 +8,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t mt-16 py-10 text-sm text-foreground/60">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
           <p>
-            © {new Date().getFullYear()} CivicPulse. Built for engaged communities.
+            © {new Date().getFullYear()} CivicPulse. Built for engaged
+            communities.
           </p>
           <div className="flex items-center gap-3">
-            <a className="hover:text-foreground" href="/feed">Community</a>
-            <a className="hover:text-foreground" href="/authority">Authority</a>
+            <a className="hover:text-foreground" href="/feed">
+              Community
+            </a>
+            <a className="hover:text-foreground" href="/authority">
+              Authority
+            </a>
           </div>
         </div>
       </footer>

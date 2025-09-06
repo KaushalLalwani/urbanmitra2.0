@@ -4,7 +4,13 @@ import IssueForm from "@/components/IssueForm";
 import IssueCard from "@/components/IssueCard";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useIssues } from "@/context/IssuesContext";
 import type { IssueCategory } from "@shared/api";
 
@@ -23,9 +29,14 @@ export default function Index() {
   const { filtered } = useIssues();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<(typeof categories)[number]>("all");
-  const [status, setStatus] = useState<"all" | "new" | "in_progress" | "resolved">("all");
+  const [status, setStatus] = useState<
+    "all" | "new" | "in_progress" | "resolved"
+  >("all");
 
-  const list = useMemo(() => filtered({ query, category, status }), [filtered, query, category, status]);
+  const list = useMemo(
+    () => filtered({ query, category, status }),
+    [filtered, query, category, status],
+  );
 
   return (
     <Layout>
@@ -37,12 +48,19 @@ export default function Index() {
                 Empower your city with CivicPulse
               </h1>
               <p className="mt-3 text-muted-foreground">
-                Report issues in seconds, track progress, and celebrate resolutions together.
+                Report issues in seconds, track progress, and celebrate
+                resolutions together.
               </p>
               <div className="mt-4 flex items-center gap-3">
-                <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800">Secure uploads</span>
-                <span className="inline-flex items-center rounded-full bg-cyan-100 px-3 py-1 text-xs font-medium text-cyan-800">Real-time status</span>
-                <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800">Token rewards</span>
+                <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800">
+                  Secure uploads
+                </span>
+                <span className="inline-flex items-center rounded-full bg-cyan-100 px-3 py-1 text-xs font-medium text-cyan-800">
+                  Real-time status
+                </span>
+                <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800">
+                  Token rewards
+                </span>
               </div>
             </div>
             <IssueForm />
@@ -52,14 +70,23 @@ export default function Index() {
             <div className="rounded-xl border bg-card p-4 md:p-6 shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
                 <div className="flex-1">
-                  <Input placeholder="Search reports by title, description, or location" value={query} onChange={(e) => setQuery(e.target.value)} />
+                  <Input
+                    placeholder="Search reports by title, description, or location"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
                 </div>
                 <div className="min-w-[180px]">
                   <Select onValueChange={(v) => setCategory(v as any)}>
-                    <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
                     <SelectContent>
                       {categories.map((c) => (
-                        <SelectItem key={c} value={c}>{String(c).charAt(0).toUpperCase() + String(c).slice(1)}</SelectItem>
+                        <SelectItem key={c} value={c}>
+                          {String(c).charAt(0).toUpperCase() +
+                            String(c).slice(1)}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -77,25 +104,41 @@ export default function Index() {
                     {list.map((i) => (
                       <IssueCard key={i.id} issue={i} />
                     ))}
-                    {!list.length && <p className="text-sm text-muted-foreground">No reports yet. Be the first to report an issue!</p>}
+                    {!list.length && (
+                      <p className="text-sm text-muted-foreground">
+                        No reports yet. Be the first to report an issue!
+                      </p>
+                    )}
                   </TabsContent>
                   <TabsContent value="new" className="mt-4 space-y-4">
                     {list.map((i) => (
                       <IssueCard key={i.id} issue={i} />
                     ))}
-                    {!list.length && <p className="text-sm text-muted-foreground">Nothing here.</p>}
+                    {!list.length && (
+                      <p className="text-sm text-muted-foreground">
+                        Nothing here.
+                      </p>
+                    )}
                   </TabsContent>
                   <TabsContent value="in_progress" className="mt-4 space-y-4">
                     {list.map((i) => (
                       <IssueCard key={i.id} issue={i} />
                     ))}
-                    {!list.length && <p className="text-sm text-muted-foreground">Nothing here.</p>}
+                    {!list.length && (
+                      <p className="text-sm text-muted-foreground">
+                        Nothing here.
+                      </p>
+                    )}
                   </TabsContent>
                   <TabsContent value="resolved" className="mt-4 space-y-4">
                     {list.map((i) => (
                       <IssueCard key={i.id} issue={i} />
                     ))}
-                    {!list.length && <p className="text-sm text-muted-foreground">Nothing here.</p>}
+                    {!list.length && (
+                      <p className="text-sm text-muted-foreground">
+                        Nothing here.
+                      </p>
+                    )}
                   </TabsContent>
                 </Tabs>
               </div>
