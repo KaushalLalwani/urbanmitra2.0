@@ -37,4 +37,13 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+import type { Root } from "react-dom/client";
+
+const container = document.getElementById("root")!;
+const anyWindow = window as unknown as { __APP_ROOT__?: Root };
+if (anyWindow.__APP_ROOT__) {
+  anyWindow.__APP_ROOT__!.render(<App />);
+} else {
+  anyWindow.__APP_ROOT__ = createRoot(container);
+  anyWindow.__APP_ROOT__!.render(<App />);
+}
