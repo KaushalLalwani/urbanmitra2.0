@@ -31,11 +31,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => setUser(load()), []);
   useEffect(() => save(user), [user]);
 
-  const value = useMemo<Ctx>(() => ({
-    user,
-    login: (u) => setUser(u),
-    logout: () => setUser(null),
-  }), [user]);
+  const value = useMemo<Ctx>(
+    () => ({
+      user,
+      login: (u) => setUser(u),
+      logout: () => setUser(null),
+    }),
+    [user],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
